@@ -10,7 +10,7 @@ import java.util.Optional;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
-public class TestJust {
+public class TestOnly {
 
     @Test
     void test3() {

@@ -19,6 +19,7 @@ public class ProxyTest {
         t.test3();
     }
 
+    //
     void test3() {
         class TargetObject {
             public String getStr(String str) {
@@ -53,6 +54,7 @@ public class ProxyTest {
 
         System.out.println("target: " + target.getClass().getEnclosingClass().getName());
 
+        //TODO 如果是内部类, Enhancer.create需要指定外部类类型和实例
         Object proxy = enhancer.create(new Class[]{ProxyTest.class}, new Object[]{this});
         return proxy;
     }
