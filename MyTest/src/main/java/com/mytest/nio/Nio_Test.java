@@ -3,6 +3,8 @@ package com.mytest.nio;
 import com.mytest.util.Util;
 import org.junit.jupiter.api.Test;
 
+import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.io.RandomAccessFile;
 import java.nio.ByteBuffer;
 import java.nio.channels.FileChannel;
@@ -56,6 +58,39 @@ class Nio_Test {
             }
 
             //TODO 结果说明, read往buffer写入, 是写入pos到lim这一段
+        }
+    }
+
+    @Test
+    void test1() throws FileNotFoundException {
+        String path = "C:\\Users\\Stark\\Desktop\\test.json";
+        try (FileChannel channel = new RandomAccessFile(path, "rw").getChannel()) {
+            System.out.println("channel size: " + channel.size());
+            channel.position(channel.size());
+
+            ByteBuffer buffer = ByteBuffer.allocate(40);
+            System.out.println("初始化 position: " + buffer.position() + ", limit: " + buffer.limit());
+
+            buffer.put(/*20 bytes*/"1234567890123456789012345678901234567890".getBytes());
+            System.out.println("put后 position: " + buffer.position() + ", limit: " + buffer.limit());
+
+            buffer.position(10);
+            buffer.clear();
+            buffer.position(buffer.limit());
+            // System.out.println("clear后 position: " + buffer.position() + ", limit: " + buffer.limit());
+
+            buffer.flip();
+            System.out.println("flip后 position: " + buffer.position() + ", limit: " + buffer.limit());
+
+            while (buffer.hasRemaining()) {
+                channel.write(buffer);
+                System.out.println("写一次后, buffer position: " + buffer.position() + ", limit: " + buffer.limit());
+            }
+
+            System.out.println("write结束, buffer position: " + buffer.position() + ", limit: " + buffer.limit());
+
+        } catch (IOException e) {
+            e.printStackTrace();
         }
     }
 }
