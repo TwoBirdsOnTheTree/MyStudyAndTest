@@ -54,6 +54,7 @@ public class Why_Delayed_getDelay_need_convert_timeunit {
         public long getDelay(TimeUnit unit) {
             // 超时时间, 但是是: 毫秒
             long expireMilliSeconds = expireTime.getTime() - System.currentTimeMillis();
+            // 按照方法参数的时间单位, 进行转换
             long convertToParamUnit = unit.convert(expireMilliSeconds, TimeUnit.MILLISECONDS);
             //TODO 切换时间单位
             // long result = expireMilliSeconds;
