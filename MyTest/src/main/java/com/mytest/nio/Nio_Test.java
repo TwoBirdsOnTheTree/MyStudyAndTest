@@ -55,6 +55,7 @@ class Nio_Test {
                 System.out.print(get);
             }
 
+            //TODO 结果说明, read往buffer写入, 是写入pos到lim这一段
         }
     }
 }
