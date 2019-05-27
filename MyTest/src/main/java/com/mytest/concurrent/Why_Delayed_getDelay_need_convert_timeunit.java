@@ -35,6 +35,8 @@ public class Why_Delayed_getDelay_need_convert_timeunit {
                     //TODO
                     // millisecond getDelay次数是: 217960, cpu会有一次小波峰
                     // nanasecond getDelay只有2次!!!! cpu无变化
+                    //
+                    //
 
 
                     System.exit(0);
@@ -53,6 +55,7 @@ public class Why_Delayed_getDelay_need_convert_timeunit {
             // 超时时间, 但是是: 毫秒
             long expireMilliSeconds = expireTime.getTime() - System.currentTimeMillis();
             long convertToParamUnit = unit.convert(expireMilliSeconds, TimeUnit.MILLISECONDS);
+            //TODO 切换时间单位
             // long result = expireMilliSeconds;
             long result = convertToParamUnit;
             System.out.println("getDelay: " + result);
