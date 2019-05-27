@@ -32,7 +32,7 @@ public class TestOnly {
 
     @Test
     void test2() {
-        class Test {
+        class JustTest {
             private String name;
 
             public String getName() {
@@ -45,8 +45,8 @@ public class TestOnly {
         }
 
         List<String> list = Arrays.asList("a", "b");
-        List<Test> collect = list.stream()
-                .map(item -> new Test() {{
+        List<JustTest> collect = list.stream()
+                .map(item -> new JustTest() {{
                     setName(item);
                 }})
                 .collect(Collectors.toList());

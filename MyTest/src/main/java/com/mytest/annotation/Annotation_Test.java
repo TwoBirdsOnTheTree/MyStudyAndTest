@@ -7,14 +7,14 @@ import java.lang.annotation.Inherited;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 
-public class AnnotationTest {
+public class Annotation_Test {
 
     @Test
-    @TestAnnotation(test = "ss")
+    @AnnotationTest(test = "ss")
         // @TestInheritAnnotation
     void test5() {
         // 注解的实例化...
-        TestAnnotation annotation = new TestAnnotation() {
+        AnnotationTest annotation = new AnnotationTest() {
 
             @Override
             public String test() {
@@ -28,7 +28,7 @@ public class AnnotationTest {
 
             @Override
             public Class<? extends Annotation> annotationType() {
-                return TestAnnotation.class;
+                return AnnotationTest.class;
             }
         };
     }
@@ -39,14 +39,14 @@ public class AnnotationTest {
     @Inherited
     @Retention(RetentionPolicy.RUNTIME)
     @OtherAnnotation
-    @interface TestAnnotation {
+    @interface AnnotationTest {
         String test();
 
         String test2() default "d";
     }
 
     // 不可继承Annotation作为定义注解
-    interface TestInheritAnnotation extends Annotation {
+    interface InheritAnnotationTest extends Annotation {
 
         String test();
 
