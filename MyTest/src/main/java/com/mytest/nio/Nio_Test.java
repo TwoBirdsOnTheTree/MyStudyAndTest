@@ -62,7 +62,7 @@ class Nio_Test {
     }
 
     @Test
-    void test1() throws FileNotFoundException {
+    void test_read_and_so_on() throws FileNotFoundException {
         String path = "C:\\Users\\Stark\\Desktop\\test.json";
         try (FileChannel channel = new RandomAccessFile(path, "rw").getChannel()) {
             System.out.println("channel size: " + channel.size());
