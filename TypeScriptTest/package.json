@@ -1,0 +1,9 @@
+{
+  "name": "TypeScriptTest",
+  "version": "1.0.0",
+  "scripts": {
+    "test": "tsc -w"
+  },
+  "dependencies": {
+  }
+}
