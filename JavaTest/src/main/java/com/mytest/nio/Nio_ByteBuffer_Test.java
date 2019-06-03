@@ -1,5 +1,6 @@
-package com.mytest.io;
+package com.mytest.nio;
 
+import com.mytest.io.Util;
 import org.junit.jupiter.api.Test;
 
 import java.nio.Buffer;
