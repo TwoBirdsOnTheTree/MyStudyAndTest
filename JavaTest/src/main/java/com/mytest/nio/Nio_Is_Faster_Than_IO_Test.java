@@ -9,7 +9,13 @@ import java.nio.ByteBuffer;
 import java.nio.channels.FileChannel;
 
 /**
- * System.out.println 是可能拖慢速度的!
+ * System.out.println 会拖慢速度, 因此修改为StringBuffer测试
+ *
+ * 通过 while(buffer.hasRemaining()) buffer.get() 速度太慢了
+ *
+ * 通过 buffer.array() 速度很快, 比bio的快一点
+ *
+ * 未测试直接缓冲器
  */
 public class Nio_Is_Faster_Than_IO_Test {
     // 17.2M
