@@ -8,11 +8,11 @@ import java.nio.ByteBuffer;
 import java.nio.CharBuffer;
 import java.nio.channels.FileChannel;
 
-public class NioTest {
+public class Nio_Test2 {
     public static String path = "C:\\Users\\sunch\\Desktop\\test.txt";
 
     public static void main(String[] args) throws Exception {
-        NioTest t = new NioTest();
+        Nio_Test2 t = new Nio_Test2();
         t.test1();
     }
 

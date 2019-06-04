@@ -13,7 +13,7 @@ import java.nio.channels.FileChannel;
 public class FileChannelTest {
     @Test
     void check_file_append() {
-        String p = NioTest.path;
+        String p = Nio_Test2.path;
         try(FileChannel c =
                 new RandomAccessFile(p, "rw").getChannel()) {
 
@@ -42,7 +42,7 @@ public class FileChannelTest {
 
     @Test
     void test_read_file_by_filechannel() {
-        String p = NioTest.path;
+        String p = Nio_Test2.path;
         try(FileChannel c =
                     new RandomAccessFile(p, "rw").getChannel()) {
 
