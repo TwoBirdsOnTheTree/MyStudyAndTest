@@ -30,7 +30,7 @@ public class Nio_Is_Faster_Than_IO_Test {
         // 修改buffer capacity
         // ByteBuffer buffer = ByteBuffer.allocate(1024);
         // ByteBuffer buffer = ByteBuffer.allocate(5096);
-        ByteBuffer buffer = ByteBuffer.allocate(10240);
+        ByteBuffer buffer = ByteBuffer.allocate(1024 * 1024);
 
         StringBuffer sb = new StringBuffer();
         int length;
@@ -56,11 +56,13 @@ public class Nio_Is_Faster_Than_IO_Test {
             buffer.clear();
         }
 
-        // 通过 while buffer.get(): 35s
-        // 通过 Buffer.array(): 458ms / 501ms / 472ms (buffer: 1k)
-        // 通过 Buffer.array(): 517ms (buffer: 5k)
-        // 通过 Buffer.array(): 694ms (buffer: 1m)
-        // 通过 Buffer.array() + StrinBuffer, buffer: 10m, 花费: 148ms
+        // 通过System.out.println
+        //     通过 while buffer.get(): 35s
+        //     通过 Buffer.array(): 458ms / 501ms / 472ms (buffer: 1k)
+        //     通过 Buffer.array(): 517ms (buffer: 5k)
+        //     通过 Buffer.array(): 694ms (buffer: 1m)
+        // 通过 StringBuilder
+        //     通过 Buffer.array() + StrinBuffer, buffer: 1m, 花费: 114ms
         System.out.println("时间是: " + (System.currentTimeMillis() - start));
     }
 
