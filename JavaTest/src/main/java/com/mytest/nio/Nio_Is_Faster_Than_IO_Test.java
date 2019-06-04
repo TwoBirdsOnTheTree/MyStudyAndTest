@@ -13,7 +13,7 @@ import java.nio.channels.FileChannel;
  *
  * 通过 while(buffer.hasRemaining()) buffer.get() 速度太慢了
  *
- * 通过 buffer.array() 速度很快, 比bio的快一点, 几十毫秒吧
+ * 通过 buffer.array() 速度很快, 整体比bio的快一点, 几十毫秒吧
  *
  * 未测试直接缓冲器
  * 测试大量写?
@@ -62,7 +62,7 @@ public class Nio_Is_Faster_Than_IO_Test {
         //     通过 Buffer.array(): 517ms (buffer: 5k)
         //     通过 Buffer.array(): 694ms (buffer: 1m)
         // 通过 StringBuilder
-        //     通过 Buffer.array() + StrinBuffer, buffer: 1m, 花费: 114ms
+        //     通过 Buffer.array(), buffer: 1m, 花费: 114ms / 192ms / 188ms / 152ms / 145ms
         System.out.println("时间是: " + (System.currentTimeMillis() - start));
     }
 
@@ -79,7 +79,7 @@ public class Nio_Is_Faster_Than_IO_Test {
             }
 
             // 746ms
-            // 修改为StringBuffer后: 181ms
+            // 修改为StringBuffer后: 181ms / 165ms / 208ms / 174ms
             System.out.println("时间是: " + (System.currentTimeMillis() - start));
         }
     }
