@@ -3,6 +3,7 @@ package com.mytest.nio;
 import com.mytest.io.Util;
 import org.junit.jupiter.api.Test;
 
+import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.RandomAccessFile;
@@ -12,10 +13,16 @@ import java.nio.channels.FileChannel;
 
 public class FileChannelTest {
     @Test
+    void filechannel_get_from_FileInputStream_cannot_write() throws Exception {
+        FileChannel channel = new FileInputStream(com.mytest.util.Util.path).getChannel();
+        channel.write((ByteBuffer) null);
+    }
+
+    @Test
     void check_file_append() {
         String p = Nio_Test2.path;
-        try(FileChannel c =
-                new RandomAccessFile(p, "rw").getChannel()) {
+        try (FileChannel c =
+                     new RandomAccessFile(p, "rw").getChannel()) {
 
             c.position(c.size());
 
@@ -43,15 +50,15 @@ public class FileChannelTest {
     @Test
     void test_read_file_by_filechannel() {
         String p = Nio_Test2.path;
-        try(FileChannel c =
-                    new RandomAccessFile(p, "rw").getChannel()) {
+        try (FileChannel c =
+                     new RandomAccessFile(p, "rw").getChannel()) {
 
             ByteBuffer buffer = ByteBuffer.allocate(10);
 
             while (c.read(buffer) != -1) {
                 buffer.flip();
                 while (buffer.hasRemaining())
-                    System.out.print((char)buffer.get());
+                    System.out.print((char) buffer.get());
                 // System.out.println("\n");
 
                 buffer.clear();
