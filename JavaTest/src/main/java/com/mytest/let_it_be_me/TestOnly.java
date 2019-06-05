@@ -13,6 +13,26 @@ import java.util.stream.Collectors;
 
 public class TestOnly {
 
+    /**
+     * 基础类型, 使用Arrays.asList后
+     */
+    @Test
+    void byte_array_to_list() {
+        byte[] bytes = "Hello".getBytes();
+
+        for (int i = 0; i < bytes.length; i++)
+            System.out.print((char) bytes[i]);
+
+        //TODO ?? 不是 List<Byte>?
+        // 包括Stream.of() 也会有类似问题
+        List<byte[]> bytesToList = Arrays.asList(bytes);
+        // List<Byte> bytesToList2 = Arrays.asList(bytes);
+
+        // 看来基础类型都有此问题
+        int[] ints = new int[]{1, 2, 3};
+        List<int[]> ints1 = Arrays.asList(ints);
+    }
+
     @Test
     void test4() {
         List<String> s = new ArrayList<>(Arrays.asList("a", "b"));
