@@ -7,6 +7,7 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.RandomAccessFile;
 import java.nio.ByteBuffer;
+import java.nio.CharBuffer;
 import java.nio.channels.FileChannel;
 
 class Nio_Test {
@@ -92,5 +93,16 @@ class Nio_Test {
         } catch (IOException e) {
             e.printStackTrace();
         }
+    }
+
+    @Test
+    void test_charbuffer_get_put() {
+        CharBuffer buffer = CharBuffer.allocate(1024);
+        buffer.put("我们");
+
+        buffer.flip();
+
+        System.out.println(buffer.get());
+        System.out.println(buffer.get());
     }
 }
