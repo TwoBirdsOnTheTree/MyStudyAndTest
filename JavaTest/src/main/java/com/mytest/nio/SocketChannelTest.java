@@ -20,7 +20,9 @@ public class SocketChannelTest {
         // Example_from_Java_Nio_book.main(null);
     }
 
+    //TODO
     // 那Socket的bind()干啥的?
+    // 并不能做服务端啊....
     void can_socket_bind_used_as_server() throws Exception {
         SocketChannel socketChannel = SocketChannel.open();
         socketChannel.configureBlocking(false);
@@ -69,7 +71,7 @@ class Example_from_Java_Nio_book {
         SocketChannel sc = SocketChannel.open();
         // 手动置为非阻塞模式
         sc.configureBlocking(false);
-        // 连接到服务器的host:port地址
+        // 连接到服务端的host:port地址
         sc.connect(new InetSocketAddress(host, port));
 
         // 判断是否完成connect连接
@@ -77,7 +79,7 @@ class Example_from_Java_Nio_book {
             doSomethingUseful();
         }
 
-        // finishConnect = true 表示与服务器建立了connect连接
+        // finishConnect = true 表示与服务端建立了connect连接
         System.out.println("connection established"); // Do something with the connected socket
         // The SocketChannel is still nonblocking
         sc.close();
