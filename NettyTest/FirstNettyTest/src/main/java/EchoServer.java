@@ -9,15 +9,10 @@ import io.netty.channel.socket.nio.NioServerSocketChannel;
 import java.net.InetSocketAddress;
 
 public class EchoServer {
-    private final int port;
-
-    public EchoServer(int port) {
-        this.port = port;
-    }
+    private final int port = 1234;
 
     public static void main(String[] args) throws Exception {
-        int port = 1234;
-        new EchoServer(port).start();
+        new EchoServer().start();
     }
 
     public void start() throws Exception {

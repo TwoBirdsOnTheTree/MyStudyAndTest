@@ -54,14 +54,15 @@ public class SelectorTest {
                 SelectionKey selectionKey = iterator.next();
 
                 // 删除表示已经处理该Channel了, 这里还不太清楚
-                selectionKeys.remove(selectionKey);
+                iterator.remove();
 
                 // 注册Selector时, interestOps 感兴趣的操作是: accept
                 // 这里只处理了isAccept请求, 还有isReadable等
                 if (selectionKey.isAcceptable()) {
                     // 如果是accept的话, 可以强转为 ServerSocketChannel
                     ServerSocketChannel channel = (ServerSocketChannel) selectionKey.channel();
-                    // accept返回的通道也可以注册Selector, interestOps 应该是read 或 write
+                    // accept返回的通道也可以注册Selector, interestOps 应该是read 或 write, 如果
+                    // 注册到Selector, 那Selector应该 isReadable & isWriteable
                     // 可以中途不断地注册Selector
                     SocketChannel acceptChannel = channel.accept();
                     // ByteBuffer buffer = ByteBuffer.allocate(1024 * 1024);
