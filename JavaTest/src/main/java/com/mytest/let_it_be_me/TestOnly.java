@@ -6,10 +6,67 @@ import org.junit.jupiter.api.Test;
 
 import java.lang.reflect.Method;
 import java.util.*;
+import java.util.function.Consumer;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
 public class TestOnly {
+
+    @Test
+    void test_remove_list_by_forEach_Lambda() {
+        ArrayList<String> list = new ArrayList<>(Arrays.asList("a", "b", "c"));
+        Iterator<String> iterator = list.iterator();
+        forEach(iterator, i -> {
+            System.out.print(i);
+            if ("c".equals(i))
+                iterator.remove();
+        });
+
+        System.out.println("\n结果是: " + list);
+    }
+
+    <E> void forEach(Iterator<E> iterator, Consumer<? super E> action) {
+        Objects.requireNonNull(iterator);
+        Objects.requireNonNull(action);
+        while (iterator.hasNext())
+            action.accept(iterator.next());
+    }
+
+    @Test
+    void test_remove_list_by_iterator() {
+        ArrayList<String> list = new ArrayList<>(Arrays.asList("a", "b", "c"));
+        Iterator<String> iterator = list.iterator();
+
+        while (iterator.hasNext()) {
+            String i = iterator.next();
+            System.out.print(i);
+
+            if ("c".equals(i))
+                iterator.remove();
+        }
+
+        System.out.println("\n" + list);
+        list.add("c");
+
+        // IllegalStateException Exception
+        // 因为方法 forEachRemaining 被ArrayList覆写了...
+        Iterator<String> iteratorForLambda = list.iterator();
+        iteratorForLambda.forEachRemaining(i -> {
+            System.out.print(i);
+            if ("c".equals(i))
+                iteratorForLambda.remove();
+        });
+    }
+
+    @Test
+    void list_remove() {
+        List<String> list = new ArrayList<>(Arrays.asList("a", "b", "c"));
+        for (String i : list) {
+            // ConcurrentModificationException
+            if ("c".equals(i))
+                list.remove(i);
+        }
+    }
 
     @Test
     void fastjson_parseObject_if_will_change_sort_test() {
