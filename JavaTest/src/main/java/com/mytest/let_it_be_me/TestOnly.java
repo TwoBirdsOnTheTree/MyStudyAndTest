@@ -1,17 +1,29 @@
 package com.mytest.let_it_be_me;
 
 import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.JSONObject;
 import org.junit.jupiter.api.Test;
 
 import java.lang.reflect.Method;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
 public class TestOnly {
+
+    @Test
+    void fastjson_parseObject_if_will_change_sort_test() {
+        Map<String, String> map = new HashMap<String, String>() {{
+            put("1", "1");
+            put("2", "2");
+            put("3", "3");
+            put("4", "4");
+        }};
+        String str = JSON.toJSONString(map);
+        System.out.println(str);
+        JSONObject parse = JSON.parseObject(str);
+        parse.entrySet().forEach(i -> System.out.println(i.getKey() + " , " + i.getValue()));
+    }
 
     /**
      * 基础类型, 使用Arrays.asList后
