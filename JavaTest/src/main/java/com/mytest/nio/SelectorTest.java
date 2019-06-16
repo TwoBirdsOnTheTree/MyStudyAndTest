@@ -64,6 +64,7 @@ public class SelectorTest {
                     // accept返回的通道也可以注册Selector, interestOps 应该是read 或 write, 如果
                     // 注册到Selector, 那Selector应该 isReadable & isWriteable
                     // 可以中途不断地注册Selector
+                    //TODO 既然这个channel已经就绪, 那这accept()返回结果应该不可能为空, 确定吗?
                     SocketChannel acceptChannel = channel.accept();
                     // ByteBuffer buffer = ByteBuffer.allocate(1024 * 1024);
                     // acceptChannel.read(buffer);
