@@ -9,8 +9,34 @@ import java.util.*;
 import java.util.function.Consumer;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 public class TestOnly {
+
+    @Test
+    void test_java8_flatMap() {
+        class Map {
+            String id;
+            List<String> ids;
+        }
+        Map a = new Map() {{
+            id = "a";
+            ids = Arrays.asList("b", "c");
+        }};
+        Map b = new Map() {{
+            id = "d";
+            ids = Arrays.asList("e", "f");
+        }};
+
+        List<String> flatMapResult = Stream.of(a, b).flatMap(i -> {
+            List<String> ids = new ArrayList<>();
+            ids.add(i.id);
+            ids.addAll(i.ids);
+            return ids.stream();
+        }).collect(Collectors.toList());
+
+        System.out.println(flatMapResult);
+    }
 
     @Test
     void test_remove_list_by_forEach_Lambda() {
