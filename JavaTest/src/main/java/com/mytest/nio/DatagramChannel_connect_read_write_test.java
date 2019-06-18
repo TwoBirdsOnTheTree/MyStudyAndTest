@@ -4,6 +4,10 @@ import java.net.InetSocketAddress;
 import java.nio.ByteBuffer;
 import java.nio.channels.DatagramChannel;
 
+/**
+ * 失败了, 接收不到消息啊!
+ * 用的人很少吧, 网上都搜不到的
+ */
 public class DatagramChannel_connect_read_write_test {
     class Receive {
         DatagramChannel receiveChannel;
