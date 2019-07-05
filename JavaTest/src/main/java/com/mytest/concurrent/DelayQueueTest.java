@@ -51,7 +51,7 @@ public class DelayQueueTest {
                 while (true) {
                     // System.out.println("测试时候会阻塞");
                     try {
-                        //TODO 消费延迟队列
+                        //TODO 消费延迟队列, 当队列没有数据时, 会阻塞
                         Order order = queue.take();
                         String expireTime = new SimpleDateFormat("HH:mm:ss").format(order.expireTime);
                         System.out.println("       DelayQueue订单: " + expireTime);
