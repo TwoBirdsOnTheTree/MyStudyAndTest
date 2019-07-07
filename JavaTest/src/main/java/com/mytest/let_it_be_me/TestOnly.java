@@ -6,12 +6,84 @@ import org.junit.jupiter.api.Test;
 
 import java.lang.reflect.Method;
 import java.util.*;
+import java.util.function.BiConsumer;
 import java.util.function.Consumer;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
+import java.util.stream.IntStream;
 import java.util.stream.Stream;
 
 public class TestOnly {
+
+    // 倒序可以在foreach中同时删除
+    @Test
+    void test_foreach_delete() {
+        List<String> strings = new ArrayList<>(Arrays.asList("a", "ab", "ac", "de"));
+        for (int i = strings.size() - 1; i >= 0; i--) {
+            System.out.println(strings.get(i));
+            if ("ab".equals(strings.get(i))) {
+                strings.remove(i);
+            }
+        }
+
+        System.out.println(strings + "\n");
+
+        ArrayList<String> strings2 = new ArrayList<>(Arrays.asList("a", "ab", "ac", "de"));
+
+        // 写成方法
+        reverseForeach(strings2, (i, v) -> {
+            System.out.println(v);
+            if ("ab".equals(v)) {
+                strings2.remove(v);
+                // strings2.remove(i.intValue());
+            }
+        });
+
+        System.out.println(strings2);
+    }
+
+    /**
+     * {@link TestOnly#forEach(Iterator, Consumer)}:<br>
+     * 1. 顺序是正序, 2. 适用所有Iterator, 3. 需要先生成Iterator <br>
+     * {@link TestOnly#reverseForeach(List, BiConsumer)}:<br>
+     * 1. 倒序, 2. 仅适用List<br>
+     * @see TestOnly#forEach(Iterator, Consumer)
+     */
+    private <T> void reverseForeach(List<T> list, BiConsumer<Integer, T> consumer) {
+        Objects.requireNonNull(list);
+        for (int i = list.size() - 1; i >= 0; i--) {
+            consumer.accept(i, list.get(i));
+        }
+    }
+
+    @Test
+    void not_sure() {
+        class Change {
+            String name;
+        }
+        Change c;
+        IntStream.range(0, 5).forEach(i -> {
+            // now sure
+        });
+    }
+
+    @Test
+    void little_comfused() {
+        System.out.println((double) 6 / 12);
+    }
+
+    @Test
+    void test_fastjson_toJSONString() {
+        class InnerClass {
+            public String str = "im string";
+        }
+        System.out.println(JSON.toJSONString(new InnerClass()));
+    }
+
+    @Test
+    void test_groupingBy() {
+        List<String> strings = Arrays.asList("a", "ab", "ac", "de");
+    }
 
     @Test
     void test_java8_flatMap() {
@@ -51,6 +123,9 @@ public class TestOnly {
         System.out.println("\n结果是: " + list);
     }
 
+    /**
+     * @see TestOnly#reverseForeach(List, BiConsumer)
+     */
     <E> void forEach(Iterator<E> iterator, Consumer<? super E> action) {
         Objects.requireNonNull(iterator);
         Objects.requireNonNull(action);

@@ -26,17 +26,19 @@ public class DelayQueueTest {
             public Date createTime;
             public Date expireTime;
 
+            //TODO getDelay()返回延时执行的时间, 比如这里是: 订单的超时时间 减去 当前时间
             @Override
             public long getDelay(TimeUnit unit) {
-                // System.out.println("是否一直在调用getDelay, 判断是否为0?"); // 是的, 一直再调用
+                // System.out.println("是否一直在调用getDelay, 判断是否为0?"); // 是的, 一直再调用 // 不是一直调用, 因为之前没有利用参数的TimeUnit
                 // return expireTime.getTime() - System.currentTimeMillis();
                 long expireMilliSeconds = expireTime.getTime() - System.currentTimeMillis();
+                //TODO 利用参数的TimeUnit转换时间单位
                 return unit.convert(expireMilliSeconds, TimeUnit.MILLISECONDS);
             }
 
             @Override
             public int compareTo(Delayed o) {
-                //TODO 强转?
+                //强转?
                 Order other = (Order) o;
                 return this.expireTime.compareTo(other.expireTime);
             }
@@ -49,6 +51,7 @@ public class DelayQueueTest {
                 while (true) {
                     // System.out.println("测试时候会阻塞");
                     try {
+                        //TODO 消费延迟队列, 当队列没有数据时, 会阻塞
                         Order order = queue.take();
                         String expireTime = new SimpleDateFormat("HH:mm:ss").format(order.expireTime);
                         System.out.println("       DelayQueue订单: " + expireTime);
@@ -78,7 +81,7 @@ public class DelayQueueTest {
                         Order order = generateOrder.get();
                         String expireTime = new SimpleDateFormat("HH:mm:ss").format(order.expireTime);
                         System.out.println("生成订单, expireTime: " + expireTime);
-                        // 加入延迟队列
+                        //TODO 加入延迟队列
                         orderClose.queue.add(order);
                         // 效果完全一样: orderClose.queue.offer(order);
                         // 模拟随机生成订单
