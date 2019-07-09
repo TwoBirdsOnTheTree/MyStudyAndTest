@@ -15,6 +15,17 @@ import java.util.stream.Stream;
 
 public class TestOnly {
 
+    //TODO 额, 负数的负号, 在转字符串后, 和字符串"-"是一样的...
+    @Test
+    void just_be_sure() {
+        String a = "one";
+        Integer b = -888;
+        Integer c = -1;
+        String s = a + "-" + b + "-" + c;
+        System.out.println(s);
+        Stream.of(s.split("-")).forEach(f -> System.out.println(f));
+    }
+
     // 倒序可以在foreach中同时删除
     @Test
     void test_foreach_delete() {
@@ -47,6 +58,7 @@ public class TestOnly {
      * 1. 顺序是正序, 2. 适用所有Iterator, 3. 需要先生成Iterator <br>
      * {@link TestOnly#reverseForeach(List, BiConsumer)}:<br>
      * 1. 倒序, 2. 仅适用List<br>
+     *
      * @see TestOnly#forEach(Iterator, Consumer)
      */
     private <T> void reverseForeach(List<T> list, BiConsumer<Integer, T> consumer) {
