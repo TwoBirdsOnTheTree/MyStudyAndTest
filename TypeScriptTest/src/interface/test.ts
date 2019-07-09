@@ -38,3 +38,7 @@ fun(a);
 funOtherPeople(a);
 // 不支持接口的实例化
 var you = new You();
+
+// ts操作dom
+// 一定要手动指定为HTMLElement类型, 否则就是默认的Element类型了
+let dom: HTMLElement = document.querySelector('root');
