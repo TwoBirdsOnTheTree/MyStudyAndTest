@@ -60,7 +60,8 @@ public class GroupingByTest {
 
         // Collectors.groupingBy + Collectors.collectingAndThen
         // 类似SQL: select id, sum(col1) / sum(col2) from list
-        // 思路是: 利用`Collectors.collectingAndThen`
+        // 利用`Collectors.collectingAndThen`
+        //      就可以实现复杂的分组功能了: select id, sum(col1), count(col2), sum(col1)/count(col2) 等等
         Map<Integer, Long> collect3 = list.stream()
                 .collect(Collectors.groupingBy(
                         k -> k.id,
