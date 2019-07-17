@@ -6,6 +6,7 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.function.Function;
 import java.util.stream.Collectors;
 
 @SuppressWarnings({"Duplicates", "Convert2MethodRef"})
@@ -48,6 +49,29 @@ public class CollectingAndThen_Test {
                     // Set<Map.Entry<Object, List<Object>>> entries = v.entrySet();
                     return null;
                 }
+        );
+
+        /**
+         * 和`groupingBy`联合使用
+         */
+        Collectors.groupingBy(
+                // 第一个是Function, apply()返回值是`groupingBy`结果的key
+                (a) -> {
+                    return "key";
+                },
+                // 按key分组后, 每组都对应一个数组元素的list
+                // groupingBy(Function) <==> groupingBy(Function, Collectors.toList())
+                // 第二个参数就是`对每个list的收集器`
+                Collectors.collectingAndThen(
+                        // 原收集器, 这里感觉一般都是`toList`
+                        Collectors.toList(),
+                        // 收集器的处理
+                        eachSubList -> {
+                            int size = eachSubList.size();
+                            // 这里实现的效果是: select key, count(1) / 5
+                            return size / 5;
+                        }
+                )
         );
     }
 }
