@@ -37,7 +37,8 @@ public class CollectingAndThen_Test {
                     // 那 Function.apply()方法的参数 v 是什么?
                     //   v 是 第一个参数(收集器)收集的结果!
                     // 那 Function.apply()方法的返回值 是什么?
-                    //   就是对收集器的处理(或者说转换)
+                    //   就是对收集器的处理(或者说转换),
+                    //   apply()返回值才是collectingAndThen收集器的收集结果
                     //
                     // 1: v 是 list
                     // 2: v 是 set
