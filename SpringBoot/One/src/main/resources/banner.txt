@@ -1,0 +1,8 @@
+
+|   |     |    |             ,---.          o          ,---.          |    |
+|---|,---.|    |    ,---.    `---.,---.,---..,---.,---.|---.,---.,---.|--- |
+|   ||---'|    |    |   |        ||   ||    ||   ||   ||   ||   ||   ||
+`   '`---'`---'`---'`---'    `---'|---'`    ``   '`---|`---'`---'`---'`---'o
+                                  |               `---'
+SpringBoot version is ${spring-boot.version}
+Application name is ${application.title}, version is ${application.version}

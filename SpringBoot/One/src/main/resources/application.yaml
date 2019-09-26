@@ -1,0 +1,61 @@
+###### default部分 ######
+spring:
+  profiles:
+    active: dev # 指定激活的profile, 只有在default profile中使用有效
+  mvc.static-path-pattern: resources/**
+  datasource:
+    url: jdbc:mysql://192.168.234.128:3306/db_test
+    username: root
+    password: root
+    # driver-class-name: com.mysql.jdbc.Driver #省略因为SpringBoot可以deduce
+
+logging:
+  file: spring-boot-logging.log
+
+merge-list-test:
+  - name: name1
+    desc: desc1
+  - name: name2
+    desc: desc2
+
+merge-map-test:
+  key1:
+    name: name1
+    desc: desc1
+  key2:
+    name: name2
+    desc: desc2
+
+###### dev部分 ######
+---
+application:
+  title: ${mytitle}
+
+mytitle: MyApplicationTitle
+
+server:
+  port: 8888
+
+spring:
+  config:
+    # 为何无效啊
+    # 因为必须要在`命令行参数`中指定, 属于`environment property`
+    additional-location: classpath:myconfig/application.yaml
+  profiles: dev # 指定这部分是dev profile
+
+debug: false
+
+merge-list-test:
+  - name: name3
+    desc: desc3
+
+merge-map-test:
+  key1:
+    name: name-will-be-overrided
+
+acm:
+  enable: true
+  remote-address: 127.0.0.1
+  security:
+    usernameAaa_: sun
+    password: 233
