@@ -13,20 +13,19 @@ public class NoVisibility {
         public void run() {
             while (!ready)
                 Thread.yield();
-            System.out.print(0 == number ? "-------------: 0! \n" : "");
+            System.out.print(0 == number ? "-------------: 0! \n" : ".");
         }
 
         public static void main(String[] args) throws InterruptedException {
             IntStream.range(0, 100).forEach(i -> {
                 try {
-                    while (true) {
-                        new ReaderThread().start();
+                    new ReaderThread().start();
 
-                        number = 42;
-                        ready = true;
+                    number = 42;
+                    ready = true;
 
-                        Thread.sleep(100);
-                    }
+                    Thread.sleep(100);
+                    System.out.println("执行第: " + i);
                 } catch (Exception e) {
                     e.printStackTrace();
                 }

@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:dubbo="http://dubbo.apache.org/schema/dubbo"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans
+       http://www.springframework.org/schema/beans/spring-beans.xsd
+       http://dubbo.apache.org/schema/dubbo
+       http://dubbo.apache.org/schema/dubbo/dubbo.xsd">
+
+    <dubbo:application name="dubbo-provider"/>
+
+    <dubbo:registry address="zookeeper://localhost:2181"/>
+
+    <dubbo:protocol name="dubbo" port="20880"/>
+
+    <bean id="demoService" class="com.test.dubbo.service.impl.DemoServiceImpl"/>
+    <dubbo:service interface="com.test.dubbo.service.DemoService" ref="demoService"/>
+
+    <bean id="demoService1" class="com.test.dubbo.service.impl.DemoService1Impl"/>
+    <dubbo:service interface="com.test.dubbo.service.DemoService1" ref="demoService1"/>
+
+    <!-- 泛化实现: n个Service可以是同一个实现 -->
+    <!--比如这里就是, GenericServiceImpl是DemoService1的实现-->
+    <!--GenericServiceImpl还可以是xxxXxxxService的实现, 即所谓的"泛化实现"-->
+    <bean id="genericService" class="com.test.dubbo.service.impl.GenericServiceImpl"/>
+    <dubbo:service interface="com.test.dubbo.service.DemoService1" ref="genericService"/>
+
+    <bean id="asyncService" class="com.test.dubbo.service.impl.AsyncServiceImpl"/>
+    <dubbo:service interface="com.test.dubbo.service.AsyncService" ref="asyncService"/>
+
+    <bean id="callbackService" class="com.test.dubbo.service.impl.CallbackServiceImpl"/>
+    <dubbo:service interface="com.test.dubbo.service.CallbackService" ref="callbackService">
+        <!-- 回调中, provider端会"回调"定义在consumer端的代码, 这一般都会禁止的,  -->
+        <!-- 因此需要手动指定callback参数 -->
+        <dubbo:method name="addListener">
+            <dubbo:argument index="1" callback="true"/>
+        </dubbo:method>
+    </dubbo:service>
+
+    <!--本地存根-->
+    <bean id="localStubService" class="com.test.dubbo.service.impl.LocalStubServiceImpl"/>
+    <!--stub="true"-->
+    <dubbo:service ref="localStubService" interface="com.test.dubbo.service.LocalStubService"/>
+</beans>

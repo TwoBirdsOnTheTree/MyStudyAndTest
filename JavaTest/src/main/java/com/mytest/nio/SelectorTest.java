@@ -2,6 +2,7 @@ package com.mytest.nio;
 
 import org.junit.jupiter.api.Test;
 
+import java.io.IOException;
 import java.net.InetSocketAddress;
 import java.net.InterfaceAddress;
 import java.net.SocketAddress;
@@ -18,8 +19,9 @@ public class SelectorTest {
 
     /**
      * 执行通过 cmd:
-     *      telnet localhost 1234
-     *      telnet localhost 1235
+     * telnet localhost 1234
+     * telnet localhost 1235
+     *
      * @throws Exception
      */
     @Test
@@ -111,5 +113,78 @@ public class SelectorTest {
         System.out.println(SelectionKey.OP_READ | SelectionKey.OP_WRITE
                 | SelectionKey.OP_CONNECT | SelectionKey.OP_ACCEPT);
 
+    }
+
+    @Test
+    void let_me_try() {
+        try {
+            Selector selector = Selector.open();
+
+            ServerSocketChannel serverSocketChannel = ServerSocketChannel.open();
+            serverSocketChannel.configureBlocking(false);
+            serverSocketChannel.bind(new InetSocketAddress(1234));
+            serverSocketChannel.register(selector, SelectionKey.OP_ACCEPT);
+
+            while (true) {
+                int select = selector.select();
+
+                Set<SelectionKey> selectionKeys = selector.selectedKeys();
+                if (null == selectionKeys)
+                    continue;
+                Iterator<SelectionKey> iterator = selectionKeys.iterator();
+                while (iterator.hasNext()) {
+                    System.out.println(".");
+                    SelectionKey selectionKey = iterator.next();
+
+                    if (selectionKey.isAcceptable()) {
+                        ServerSocketChannel serverSocketChannelFromSelector
+                                = (ServerSocketChannel) selectionKey.channel();
+
+                        SocketChannel socketChannel = serverSocketChannelFromSelector.accept();
+                        socketChannel.configureBlocking(false);
+                        socketChannel.register(selector, SelectionKey.OP_READ);
+                        // socketChannel.write(ByteBuffer.wrap("HelloNIO".getBytes()));
+
+                        // serverSocketChannelFromSelector.close();
+                    }
+
+                    if (selectionKey.isReadable()) {
+                        System.out.println("isReadable");
+                        SocketChannel socketChannel = (SocketChannel) selectionKey.channel();
+                        ByteBuffer byteBuffer = ByteBuffer.allocate(1024);
+                        while (socketChannel.read(byteBuffer) > 0) {
+                            byteBuffer.flip();
+                            String read = new String(byteBuffer.array());
+                            System.out.println(read);
+
+                            // 模拟响应
+                            if (true) {
+                                selectionKey.attach(read);
+                                // 在interestOps中添加OP_WRITE, 这样会触发isWritable
+                                selectionKey.interestOps(selectionKey.interestOps() | SelectionKey.OP_WRITE);
+                            }
+                            byteBuffer.clear();
+                        }
+                        // socketChannel.close();
+                    }
+
+                    if (selectionKey.isWritable()) {
+                        System.out.println("isWritable");
+                        SocketChannel socketChannel = (SocketChannel) selectionKey.channel();
+                        Object attach = selectionKey.attachment();
+                        socketChannel.write(ByteBuffer.wrap(attach.toString().getBytes()));
+                        // 写一次后就需要去掉interestOps中的write op,
+                        // 否则会重复触发isWriteable, 从而重复write
+                        selectionKey.interestOps(SelectionKey.OP_READ);
+                    }
+
+                    //TODO 勿忘
+                    iterator.remove();
+                }
+
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 }

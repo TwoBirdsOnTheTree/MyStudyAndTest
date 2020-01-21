@@ -4,17 +4,20 @@ import org.junit.jupiter.api.Test;
 
 import java.io.File;
 import java.nio.file.Paths;
+import java.util.Objects;
+import java.util.function.Consumer;
+import java.util.function.Supplier;
 
 public class Util {
     public static String path = null;
     public static String writePath = null;
 
     static {
-        String filePath = Util.class.getClassLoader().getResource("test.txt").getFile();
-        path = new File(filePath).getAbsolutePath();
+        // String filePath = Util.class.getClassLoader().getResource("test.txt").getFile();
+        // path = new File(filePath).getAbsolutePath();
 
-        String writeFilePath = Util.class.getClassLoader().getResource("test.txt").getFile();
-        writePath = new File(writeFilePath).getAbsolutePath();
+        // String writeFilePath = Util.class.getClassLoader().getResource("test.txt").getFile();
+        // writePath = new File(writeFilePath).getAbsolutePath();
     }
 
     // 获取classpath
@@ -60,5 +63,20 @@ public class Util {
         System.out.println(new File(
                 path
         ).getAbsolutePath());
+    }
+
+    /**
+     * 消除Thread.sleep的try catch结构
+     * @param sleepMilliSeconds 。。
+     */
+    public static void sleep(Integer sleepMilliSeconds) {
+        try {
+            if (Objects.nonNull(sleepMilliSeconds)) {
+                Thread.sleep(sleepMilliSeconds);
+            }
+        } catch (InterruptedException e) {
+            System.out.println("线程中断了");
+            e.printStackTrace();
+        }
     }
 }

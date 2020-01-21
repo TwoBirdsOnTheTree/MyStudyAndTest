@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:dubbo="http://dubbo.apache.org/schema/dubbo"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans
+       http://www.springframework.org/schema/beans/spring-beans.xsd
+       http://dubbo.apache.org/schema/dubbo
+       http://dubbo.apache.org/schema/dubbo/dubbo.xsd">
+
+    <dubbo:application name="dubbo-consumer"/>
+
+    <!--register="false"-->
+    <dubbo:registry address="zookeeper://localhost:2181"/>
+
+    <dubbo:reference id="demoService" interface="com.test.dubbo.service.DemoService"
+                     url="dubbo://127.0.0.1:20880"/>
+
+    <!--泛化引用-->
+    <dubbo:reference id="demoService1" interface="com.test.dubbo.service.DemoService1"
+                     generic="true"
+    />
+
+    <!--泛化实例, 在消费端看不出来区别-->
+    <dubbo:reference id="demoService2" interface="com.test.dubbo.service.DemoService1"/>
+
+    <dubbo:reference id="asyncService" interface="com.test.dubbo.service.AsyncService"/>
+
+    <dubbo:reference id="callbackService" interface="com.test.dubbo.service.CallbackService"/>
+
+    <bean id="notifyImpl" class="com.test.dubbo.beans.NotifyImpl"/>
+    <dubbo:reference id="notifyTestBean" interface="com.test.dubbo.service.DemoService" async="true">
+        <dubbo:method name="sayHello" onreturn="notifyImpl.onreturn" async="true"/>
+    </dubbo:reference>
+
+    <!--先执行stub (LocalStubConsumerImpl的sayHello), 再手动调用dobbo(可选)-->
+    <dubbo:reference id="localStubConsumerService" interface="com.test.dubbo.service.LocalStubService"
+                     stub="com.test.dubbo.beans.LocalStubConsumerImpl"
+    />
+</beans>

@@ -1,0 +1,9 @@
+{
+  "properties": [
+    {
+      "name": "acm.enable",
+      "type": "java.lang.Boolean",
+      "description": "这个是配置啥的呢?谢谢谢谢"
+    }
+  ]
+}

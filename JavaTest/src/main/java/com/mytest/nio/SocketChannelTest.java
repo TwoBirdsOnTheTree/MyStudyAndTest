@@ -1,5 +1,8 @@
 package com.mytest.nio;
 
+import org.junit.jupiter.api.Test;
+
+import java.io.IOException;
 import java.net.InetSocketAddress;
 import java.nio.ByteBuffer;
 import java.nio.channels.SocketChannel;
@@ -56,6 +59,12 @@ public class SocketChannelTest {
                 Thread.sleep(200);
             }
         }
+    }
+
+    @Test
+    void test_default_block_mode() throws IOException {
+        SocketChannel sc = SocketChannel.open();
+        System.out.println("sc isBlocking: " + sc.isBlocking());
     }
 }
 

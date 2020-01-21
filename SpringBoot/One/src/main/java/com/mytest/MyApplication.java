@@ -4,6 +4,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.mytest.test.AcmPropertiesTest;
 import com.mytest.test.OtherBean;
 import com.mytest.test.ThirdBean;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.context.properties.ConfigurationProperties;
@@ -14,8 +15,11 @@ import org.springframework.context.ApplicationEvent;
 import org.springframework.context.ApplicationListener;
 import org.springframework.context.ConfigurableApplicationContext;
 import org.springframework.context.annotation.Bean;
+import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.context.WebApplicationContext;
 
 import javax.servlet.Servlet;
 import javax.servlet.ServletException;
@@ -30,9 +34,17 @@ import java.util.*;
 @ServletComponentScan
 public class MyApplication {
 
+    @Autowired
+    private WebApplicationContext context;
+
     @RequestMapping("/hi")
-    String home() {
-        return "HelloWorld";
+    List<String> home(@RequestBody(required = false) Object body, HttpServletRequest request) {
+        String str = "请求/hi, method: %s, body: %s, param: %s";
+        System.out.println(String.format(str, request.getMethod(), Optional.ofNullable(body).orElse(""),
+                new HashMap<>(request.getParameterMap())));
+        // 测试方法
+        MyApplication.TEST_HOME(context);
+        return Arrays.asList("HelloWorld", "Spring Boot!");
     }
 
     public static void main(String[] args) throws Exception {
@@ -74,7 +86,7 @@ public class MyApplication {
             @Override
             protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
                 // 目前打印中文时异常
-                resp.getOutputStream().print("Spring Boot add Servlet, not support chinese character now");
+                resp.getOutputStream().print("Spring Boot add Servlet, (not support chinese character now)");
                 // super.doGet(req, resp);
             }
         };
@@ -87,6 +99,12 @@ public class MyApplication {
         // 设置Servlet匹配的Url, 不设置的话, 所有的请求都会被这个Servlet处理
         servletRegistrationBean.setUrlMappings(Arrays.asList("/myServlet"));
         return servletRegistrationBean;
+    }
+
+    /*测试方法*/
+    private static void TEST_HOME(ApplicationContext context) {
+        Object profileBean = context.getBean("profileBean");
+        // System.out.println("profileBean: " + profileBean);
     }
 
     /*测试方法*/

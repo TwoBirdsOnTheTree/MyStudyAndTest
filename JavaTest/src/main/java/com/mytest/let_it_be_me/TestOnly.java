@@ -15,6 +15,25 @@ import java.util.stream.Stream;
 
 public class TestOnly {
 
+    @Test
+    void concurrent_modification_exception() {
+        HashMap<String, Object> map = new HashMap<>();
+        map.put("a", 1);
+        map.put("b", 2);
+        map.put("c", 3);
+
+        try {
+            for (Map.Entry<String, Object> entry : map.entrySet()) {
+                System.out.println("现在get key: " + entry.getKey());
+                if ("a".equals(entry.getKey())) {
+                    map.remove("a");
+                }
+            }
+        } catch (ConcurrentModificationException cme) {
+            cme.printStackTrace();
+        }
+    }
+
     //TODO 额, 负数的负号, 在转字符串后, 和字符串"-"是一样的...
     @Test
     void just_be_sure() {
@@ -230,9 +249,9 @@ public class TestOnly {
     @Test
     void test3() {
         Optional.ofNullable("ss")
-                .ifPresent(item -> {
-                    item = "dd";
-                });
+            .ifPresent(item -> {
+                item = "dd";
+            });
     }
 
     @Test
@@ -261,10 +280,10 @@ public class TestOnly {
 
         List<String> list = Arrays.asList("a", "b");
         List<JustTest> collect = list.stream()
-                .map(item -> new JustTest() {{
-                    setName(item);
-                }})
-                .collect(Collectors.toList());
+            .map(item -> new JustTest() {{
+                setName(item);
+            }})
+            .collect(Collectors.toList());
         System.out.println(JSON.toJSONString(collect));
     }
 }

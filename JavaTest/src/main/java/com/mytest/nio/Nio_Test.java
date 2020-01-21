@@ -9,6 +9,8 @@ import java.io.RandomAccessFile;
 import java.nio.ByteBuffer;
 import java.nio.CharBuffer;
 import java.nio.channels.FileChannel;
+import java.nio.file.Path;
+import java.nio.file.StandardOpenOption;
 
 class Nio_Test {
 
@@ -104,5 +106,54 @@ class Nio_Test {
 
         System.out.println(buffer.get());
         System.out.println(buffer.get());
+    }
+
+    @Test
+    void long_time_no_see_let_me_try() throws IOException {
+        FileChannel fc = FileChannel.open(Path.of("C:\\Users\\sunch\\Desktop\\pt.txt"),
+                StandardOpenOption.READ, StandardOpenOption.WRITE);
+
+        ByteBuffer byteBuffer = ByteBuffer.allocate(1024);
+
+        while (fc.read(byteBuffer) != -1) {
+            byteBuffer.flip();
+            String read = new String(byteBuffer.array());
+            System.out.println(read);
+            byteBuffer.clear();
+        }
+    }
+
+    @Test
+    void let_me_try_append_file() {
+        try (FileChannel fc = FileChannel.open(Path.of("C:\\Users\\sunch\\Desktop\\pt.txt"),
+                StandardOpenOption.READ, StandardOpenOption.WRITE);) {
+
+            fc.position(fc.size());
+
+            fc.write(ByteBuffer.wrap("\nJustKeep".getBytes()));
+            fc.force(true);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    @Test
+    void let_me_try_easiest_way_to_copy_file() throws IOException {
+        Path fromPath = Path.of("C:\\Users\\sunch\\Desktop\\pt.txt");
+        Path toPath = Path.of("C:\\Users\\sunch\\Desktop\\copyTo.txt");
+
+        if (!toPath.toFile().exists()) {
+            toPath.toFile().createNewFile();
+        }
+
+        try (FileChannel from = FileChannel.open(fromPath,
+                StandardOpenOption.READ, StandardOpenOption.WRITE);
+             FileChannel to = FileChannel.open(toPath,
+                     StandardOpenOption.READ, StandardOpenOption.WRITE)) {
+
+            from.transferTo(0, from.size(), to);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 }
