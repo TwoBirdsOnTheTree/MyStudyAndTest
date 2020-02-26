@@ -8,7 +8,8 @@
     <artifactId>SpringBootTest</artifactId>
     <packaging>pom</packaging>
     <version>1.0-SNAPSHOT</version>
+
     <modules>
-        <module>One</module>
+        <module>FirstDemo</module>
     </modules>
 </project>

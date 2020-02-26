@@ -1,0 +1,32 @@
+server.port: 8861
+
+spring.application.name: zuul-server
+
+eureka:
+  instance:
+    prefer-ip-address: true
+  client:
+    service-url:
+      default-zone: http://localhost:8761/eureka
+
+zuul:
+  routes:
+    eureka-service-b: /service-b/**
+    test-url-route:
+      path: /test-url-route/**
+      url: http://localhost:8763/ # ,http://localhost:8762/
+      # service-id: test-url-route
+  # ignored-services: eureka-service-a
+  # prefix: /api
+
+# 失败不试了，没有起效果。。
+# ribbon.eureka.enabled: false
+
+# 失败，没有起效果。。
+# test-url-route:
+#  ribbon:
+#   list-of-servers: http://localhost:8763/,http://localhost:8762/
+
+spring:
+  zipkin:
+    base-url: http://localhost:9411

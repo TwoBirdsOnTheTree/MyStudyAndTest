@@ -1,0 +1,17 @@
+# 一定要是bootstrap.yml, 如果是application.yml的话， spring.profiles.active无效？？
+
+# 通过SpringCloudConfig获取到配置
+# server.port: 8877
+
+spring:
+  application:
+    # 不同的名称对应不同的配置
+    name: someservice
+    # name: otherservice
+  profiles:
+    active: dev
+  cloud:
+    config:
+      uri: http://localhost:8888
+
+# 通过上面的配置， 对应的是：SpringCloudConfig的http://localhost:8888/someservice/dev url的配置

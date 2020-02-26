@@ -1,0 +1,3 @@
+tracer:
+  property: "I AM THE DEFAULT"
+spring.datasource.username: "test"

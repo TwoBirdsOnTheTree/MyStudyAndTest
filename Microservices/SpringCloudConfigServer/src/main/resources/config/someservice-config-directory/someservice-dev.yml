@@ -1,0 +1,5 @@
+dev:
+  property: I_AM_DEV_PROPERTY
+  other: sssss
+tracer.property: "SpringCloudConfig: dev环境下，会覆盖default的配置吗？"
+server.port: 8877

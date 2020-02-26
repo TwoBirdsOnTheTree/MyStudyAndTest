@@ -1,3 +1,10 @@
-/**/target/classes/**
+# 编译文件夹
+/**/target/**
+
+# idea工程文件
 *.iml
 .idea/**
+
+# 日志文件
+spring-boot-logging.log
+spring-boot-logging.log.*

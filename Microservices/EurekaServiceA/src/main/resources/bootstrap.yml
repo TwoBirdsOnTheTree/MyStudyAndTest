@@ -1,0 +1,19 @@
+server.port: 8762
+
+spring:
+  application:
+    # 服务名
+    name: eureka-service-a
+  zipkin:
+    base-url: http://localhost:9411
+
+eureka:
+  instance:
+    prefer-ip-address: true
+  client:
+    fetch-registry: true
+    register-with-eureka: true
+
+    # Eureka地址，向这个地址注册服务
+    service-url:
+      default-zone: http://localhost:8761/eureka

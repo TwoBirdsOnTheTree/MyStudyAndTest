@@ -1,0 +1,13 @@
+server.port: 8761
+
+spring.application.name: eureka-server
+
+eureka:
+  client:
+    # 向Eureka注册
+    register-with-eureka: false
+    # 从Eureka拉取并缓存服务注册表
+    fetch-registry: false
+
+  server:
+    wait-time-in-ms-when-sync-empty: 5

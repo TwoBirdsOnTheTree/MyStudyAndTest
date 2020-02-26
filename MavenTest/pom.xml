@@ -8,9 +8,16 @@
     <artifactId>MavenTest</artifactId>
     <packaging>pom</packaging>
     <version>1.0-SNAPSHOT</version>
+
     <modules>
         <module>SnapshotTest</module>
         <module>SnapshotTest-Dependency</module>
         <module>WebTest</module>
+        <module>PackageTest</module>
     </modules>
+
+    <properties>
+        <maven.compiler.target>1.8</maven.compiler.target>
+        <maven.compiler.source>1.8</maven.compiler.source>
+    </properties>
 </project>
