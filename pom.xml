@@ -17,6 +17,7 @@
         <module>SpringBootTest</module>
         <module>DubboStudy</module>
         <module>Microservices</module>
+        <module>RedisTest</module>
     </modules>
 
     <properties>
