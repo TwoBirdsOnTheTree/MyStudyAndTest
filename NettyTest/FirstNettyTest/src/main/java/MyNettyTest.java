@@ -1,6 +1,6 @@
-public class NettyTest {
+public class MyNettyTest {
     public static void main(String[] args) {
-        NettyTest t = new NettyTest();
+        MyNettyTest t = new MyNettyTest();
         t.promise_test();
     }
 
