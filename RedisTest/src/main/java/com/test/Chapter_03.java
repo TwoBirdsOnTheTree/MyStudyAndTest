@@ -3,6 +3,7 @@ package com.test;
 import io.lettuce.core.KeyValue;
 import io.lettuce.core.RedisClient;
 import io.lettuce.core.ScoredValue;
+import io.lettuce.core.TransactionResult;
 import io.lettuce.core.api.StatefulRedisConnection;
 import io.lettuce.core.api.async.RedisAsyncCommands;
 import io.lettuce.core.api.sync.RedisCommands;
@@ -11,6 +12,7 @@ import io.lettuce.core.pubsub.StatefulRedisPubSubConnection;
 import io.lettuce.core.pubsub.api.sync.RedisPubSubCommands;
 import org.junit.jupiter.api.Test;
 
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -20,7 +22,7 @@ import java.util.stream.IntStream;
 
 public class Chapter_03 {
     // Jedis jedis = new Jedis("192.168.234.128");
-    RedisClient redisClient = RedisClient.create("redis://192.168.192.3:6379/0");
+    RedisClient redisClient = RedisClient.create("redis://192.168.31.124:6379/0");
 
     public static void main(String[] args) {
         Chapter_03 test = new Chapter_03();
@@ -150,24 +152,30 @@ public class Chapter_03 {
         try (StatefulRedisConnection<String, String> connect = redisClient.connect()) {
             RedisCommands<String, String> commands = connect.sync();
 
-            String hash = "hash_test";
-            commands.del(hash);
+            String key = "hash_test";
+            commands.del(key);
 
-            commands.hset(hash, "key1", "value1");
-            commands.hset(hash, "key1", "value111111");
-            commands.hset(hash, "key2", "value2");
-            commands.hset(hash, "key3", "value3");
-            commands.hset(hash, "key4", "value4");
+            commands.hset(key, "hash_key_1", "value1");
+            commands.hset(key, "hash_key_1", "value111111");
+            commands.hset(key, "hash_key_2", "value2");
+            commands.hset(key, "hash_key_3", "value3");
+            commands.hset(key, "hash_key_4", "value4");
 
-            String value1 = commands.hget(hash, "key1");
-            System.out.println("key1 value1: " + value1);
+            commands.hmset(key, new HashMap<String, String>(3, 1) {{
+                put("hash_key_5", "value5");
+                put("hash_key_6", "value6");
+                put("hash_key_7", "value7");
+            }});
 
-            commands.hdel(hash, "key3");
+            String value1 = commands.hget(key, "hash_key_1");
+            System.out.println("hash_key_1 value1: " + value1);
 
-            Map<String, String> hgetall = commands.hgetall(hash);
+            commands.hdel(key, "hash_key_3");
+
+            Map<String, String> hgetall = commands.hgetall(key);
             System.out.println("hash getall: " + hgetall);
 
-            List<KeyValue<String, String>> hmget = commands.hmget(hash, "key1", "key2");
+            List<KeyValue<String, String>> hmget = commands.hmget(key, "hash_key_1", "hash_key_2");
             System.out.println("hmget: " + hmget);
         }
     }
@@ -186,13 +194,22 @@ public class Chapter_03 {
             commands.zadd(zset, 102, "member1");
             commands.zadd(zset, 100, "member33333");
             commands.zadd(zset, 100, "member2");
-            commands.zadd(zset, 104, "member4");
+            commands.zadd(zset, 103, "member4");
+            commands.zadd(zset, 107, "member5");
+            commands.zadd(zset, 104, "member6");
+            commands.zadd(zset, 105, "member7");
+            commands.zadd(zset, 108, "member8");
+            commands.zadd(zset, 106, "member9");
 
             Double member4 = commands.zscore(zset, "member4");
             System.out.println("member4 score: " + member4);
 
             List<ScoredValue<String>> zrangeWithScores = commands.zrangeWithScores(zset, 0, -1);
             System.out.println("zrangeWithScores: " + zrangeWithScores);
+
+            // 取出通过 zrangeWithScores 排序 (即通过score排序) 后的member
+            List<String> zrange = commands.zrange(zset, 1, 3);
+            System.out.println("zrange: " + zrange);
 
             Long member4_rank = commands.zrank(zset, "member4");
             Long member33333_rank = commands.zrank(zset, "member33333");
@@ -245,27 +262,36 @@ public class Chapter_03 {
 
     @Test
     public void test_transaction() {
-        try (StatefulRedisConnection<String, String> connect = redisClient.connect();) {
-            connect.sync().set("test_tx", "0");
+        try (StatefulRedisConnection<String, String> connect = redisClient.connect();
+             StatefulRedisConnection<String, String> connect_2 = redisClient.connect();) {
             RedisCommands<String, String> commands = connect.sync();
-            commands.multi();
+            RedisCommands<String, String> commands_2 = connect_2.sync();
 
-            //TODO 事务 没有弄懂.....
+            String key = "test_tx";
+            commands_2.set(key, "100");
+
+            System.out.println("before multi: " + commands.get(key));
+            commands.multi();
+            commands.set(key, "100");
+            System.out.println("after multi: " + commands.get(key));
 
             IntStream.range(0, 3)
                     .mapToObj(i -> new Thread(() -> {
-                        Long before = commands.incrby("test_tx", 1);
-                        System.out.println("before: " + commands.get("test_tx"));
+                        Long before = commands.incrby(key, 1);
+                        System.out.println("before: " + commands.get(key));
                         sleep(0.1);
-                        Long after = commands.incrby("test_tx", -1);
-                        System.out.println("after: " + commands.get("test_tx"));
+                        Long after = commands.incrby(key, -1);
+                        System.out.println("after: " + commands.get(key));
                     }))
                     .forEach(Thread::start);
-            commands.exec();
 
-            sleep(5);
+            sleep(3);
+            TransactionResult exec = commands.exec();
+            System.out.println("exec result: " + exec);
 
-            System.out.println("after: " + commands.get("test_tx"));
+            sleep(2);
+
+            System.out.println("after: " + commands.get(key));
         }
         redisClient.shutdown();
     }

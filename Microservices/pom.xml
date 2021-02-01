@@ -19,7 +19,6 @@
         <module>EurekaServiceA</module>
         <module>EurekaServiceB</module>
         <module>ZuulServer</module>
-        <module>ZipkinServer</module>
     </modules>
 
 

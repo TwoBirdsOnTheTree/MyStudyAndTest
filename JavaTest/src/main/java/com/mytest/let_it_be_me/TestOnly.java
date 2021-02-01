@@ -4,6 +4,8 @@ import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import org.junit.jupiter.api.Test;
 
+import java.io.Closeable;
+import java.io.IOException;
 import java.lang.reflect.Method;
 import java.util.*;
 import java.util.function.BiConsumer;
@@ -249,9 +251,9 @@ public class TestOnly {
     @Test
     void test3() {
         Optional.ofNullable("ss")
-            .ifPresent(item -> {
-                item = "dd";
-            });
+                .ifPresent(item -> {
+                    item = "dd";
+                });
     }
 
     @Test
@@ -280,10 +282,35 @@ public class TestOnly {
 
         List<String> list = Arrays.asList("a", "b");
         List<JustTest> collect = list.stream()
-            .map(item -> new JustTest() {{
-                setName(item);
-            }})
-            .collect(Collectors.toList());
+                .map(item -> new JustTest() {{
+                    setName(item);
+                }})
+                .collect(Collectors.toList());
         System.out.println(JSON.toJSONString(collect));
+    }
+
+    /**
+     * Try + AutoCloseable
+     */
+    @Test
+    void test5() {
+        class MyAutoCloseable implements Closeable {
+            @Override
+            public void close() {
+                System.out.println("自动关闭");
+            }
+        }
+
+        MyAutoCloseable myAutoCloseable = new MyAutoCloseable();
+
+        new Thread(() -> {
+            try (myAutoCloseable) {
+                System.out.println("线程开始");
+                if ("1".equals("1")) {
+                    throw new RuntimeException("自定义异常");
+                }
+                System.out.println("线程结束");
+            }
+        }).start();
     }
 }

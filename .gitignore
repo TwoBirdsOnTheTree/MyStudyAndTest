@@ -8,3 +8,4 @@
 # 日志文件
 spring-boot-logging.log
 spring-boot-logging.log.*
+/worm.out
