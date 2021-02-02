@@ -13,18 +13,38 @@ public class EchoServerHandler extends ChannelInboundHandlerAdapter {
     @Override
     public void channelRead(ChannelHandlerContext ctx, Object msg) {
         try {
-            System.out.println("EchoServerHandler.channelRead调用");
-            ByteBuf in = (ByteBuf) msg;
-            String msgString = in.toString(CharsetUtil.UTF_8);
-            System.out.println("Server received: " + msgString);
+            // 读取
+            {
+                System.out.println("================channelRead================");
+                System.out.println("----------------request----------------");
+                System.out.print("  -> msg: " + msg + ", msg class: " + msg.getClass().getName());
+                System.out.print("\n");
+                System.out.print("  ->");
+                if (msg instanceof ByteBuf) {
+                    ByteBuf byteBufMsg = (ByteBuf) msg;
+                    byte[] bytes = new byte[128];
+                    while (byteBufMsg.readableBytes() > 0) {
+                        int canReadLength = Math.min(byteBufMsg.readableBytes(), bytes.length);
+                        byteBufMsg.readBytes(bytes, 0, canReadLength);
+                        System.out.print(new String(bytes, 0, canReadLength).replace("\n", "\n  ->"));
+                    }
+                }
+                System.out.println("\n----------------request----------------");
+            }
+            // 先读取
+            // 然后写入响应
+            {
+                String responseString = "From Netty Server";
+                ctx.writeAndFlush(Unpooled.copiedBuffer("HTTP/1.1 200 OK\n" +
+                        "Content-Length:" + responseString.getBytes(StandardCharsets.UTF_8).length + "\n" +
+                        "Content-Type: application/json;charset=UTF-8\n" +
+                        "\n" +
+                        "From Netty Server", StandardCharsets.UTF_8));
+            }
 
-            ctx.write(Unpooled.copiedBuffer(("HTTP/1.1 200 OK\n" +
-                    "Content-Type: text/html;charset=UTF-8\n" +
-                    "Content-Length: " + msgString.getBytes().length + "\n" +
-                    "\n" +
-                    msgString).getBytes(StandardCharsets.UTF_8)));
-            ctx.fireChannelRead(msg);
+            // super.channelRead(ctx, msg);
         } finally {
+            // 写入会自动释放 // ChannelInboundHandlerAdapter不会自动释放
             ReferenceCountUtil.release(msg);
         }
     }
